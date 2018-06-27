@@ -1,2 +1,2 @@
 # userscripts
-User-scripts to ease browing the web and using common apps via their websites
+User-scripts to ease browsing the web and using common apps via their websites
