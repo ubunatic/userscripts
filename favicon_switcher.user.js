@@ -1,3 +1,16 @@
+// Copyright 2024 Uwe Jugel (@ubunatic)
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//    http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+//
 // ==UserScript==
 // @name         Custom Favicon Setter
 // @namespace    Ubunatic's Violentmonkey Scripts
@@ -41,6 +54,7 @@
       default:                                           hkClear();                return false
       }
    }
+   let hkHint = "Alt+F,I"
    // TODO: make this configurable
 
    let hardcoded = [
@@ -101,7 +115,7 @@
    // ==Init==
 
    // load the more favicon configurations from the settings
-   GM.registerMenuCommand('Configure Favicons', openUI)
+   GM.registerMenuCommand('Configure Favicon', openUI)
 
    reloadConfig(() => {
       window.addEventListener('load', () => {
@@ -331,7 +345,7 @@
             <li><b>path</b>: the path to match (default: "/"; URL pathname must start with this path)
             <li><b>match</b>: a regular expression to match against the URL pathname (default: ".*")
          </ul>
-         <p>Use <b style="font-family: Monospace">Alt/Option+I</b> two times to open/close this dialog.</p>
+         <p>Use <b style="font-family: Monospace">${ hkHint }</b> two times to open/close this dialog.</p>
          <p>To remove the entry, click the "Clear" button.</p>
          </small>
          </p>
