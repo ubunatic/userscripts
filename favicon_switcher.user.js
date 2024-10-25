@@ -29,6 +29,7 @@
 //
 // @match        https://docs.google.com/spreadsheets/d/*
 // @match        https://chatgpt.com/c/*
+// @match        https://github.com/*/*/pull*
 // @match        https://example.com/*
 // @match        https://violentmonkey.github.io/*
 //
@@ -146,9 +147,10 @@
             ...hardcoded,
          ]
          done = false
+         log("loaded settings values:", favicons.length)
          if (cb) { cb() }
       }).catch((error) => {
-         console.error("Favicon Switcher: error loading settings", error)
+         err("Favicon Switcher: error loading settings", error)
       })
    }
 
@@ -176,7 +178,7 @@
             log("saved settings values:", settings.length)
             if (cb) { cb() }
          }).catch((error) => {
-            console.error("Favicon Switcher: error saving settings", error)
+            err("Favicon Switcher: error saving settings", error)
          })
       })
    }
@@ -208,6 +210,13 @@
       let config = getConfig()
       if (config || window.location.hostname == "example.com") {
          console.log(logPrefix, ...args)
+      }
+   }
+
+   function err(...args) {
+      let config = getConfig()
+      if (config || window.location.hostname == "example.com") {
+         err(logPrefix, ...args)
       }
    }
 
@@ -267,8 +276,15 @@
 
    function replaceFavicon(url) {
       // find all favicons definitions in the head for removal
-      let headIcons = document.head.querySelectorAll(`link[rel="icon"], link[rel="shortcut icon"], link[rel="apple-touch-icon"]`)
-      let rels = ['icon', 'shortcut icon', 'apple-touch-icon']
+      let knownRels = ['icon', 'shortcut icon', 'apple-touch-icon', 'mask-icon', 'alternate icon', 'fluid-icon']
+      let relQueries = knownRels.map(rel => `link[rel="${rel}"]`)
+      let headIcons = document.head.querySelectorAll(relQueries.join(","))
+      let rels = [].map.call(headIcons, elem => elem.rel)
+
+      if (rels.length == 0) {
+         // add default rel if no favicon is set explicitly
+         rels = ['icon']
+      }
 
       let removed = 0
       let existing = 0
